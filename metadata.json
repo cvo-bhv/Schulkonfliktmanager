@@ -1,0 +1,5 @@
+{
+  "name": "SchulKonflikt Manager",
+  "description": "Eine professionelle Web-App zur Dokumentation und Verwaltung von Konfliktvorfällen an Schulen. Ermöglicht die Verwaltung von Jahrgängen, Klassen und Schülern sowie das detaillierte Protokollieren von Vorfällen nach Best-Practice-Standards.",
+  "requestFramePermissions": []
+}
