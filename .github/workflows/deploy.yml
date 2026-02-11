@@ -27,7 +27,6 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/  # Lädt nur den Inhalt des dist-Ordners hoch
-          server-dir: ./Schulkonfliktmanager/    # Hier ggf. den Pfad zu deinem Web-Verzeichnis (z.B. /httpdocs/)
-dry-run: false
-          dangerously-disable-protocol-check: true # Hilft bei manchen Hostern
+          local-dir: ./dist/
+          server-dir: ./Schulkonfliktmanager/
+          dangerously-disable-protocol-check: true
