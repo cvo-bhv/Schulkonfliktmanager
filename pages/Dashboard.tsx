@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ShieldAlert, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { ShieldAlert, CheckCircle, Clock, AlertTriangle, Database } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import * as Storage from '../services/storage';
 import { Incident, IncidentStatus } from '../types';
@@ -8,21 +8,40 @@ export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loading, setLoading] = useState(true);
+  const [seeding, setSeeding] = useState(false);
+
+  const loadData = async () => {
+    try {
+        setLoading(true);
+        // Only seeds if empty automatically
+        await Storage.seedDataIfEmpty(); 
+        const data = await Storage.getIncidents();
+        setIncidents(data);
+    } catch (error) {
+        console.error("Failed to load incidents", error);
+    } finally {
+        setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-        try {
-            await Storage.seedDataIfEmpty(); 
-            const data = await Storage.getIncidents();
-            setIncidents(data);
-        } catch (error) {
-            console.error("Failed to load incidents", error);
-        } finally {
-            setLoading(false);
-        }
-    };
     loadData();
   }, []);
+
+  const handleForceSeed = async () => {
+      if (!confirm("Dies wird ~100 Einträge in die Datenbank schreiben. Das dauert ca. 10-20 Sekunden. Fortfahren?")) return;
+      
+      setSeeding(true);
+      try {
+          await Storage.seedData(true); // true = force
+          await loadData();
+          alert("Demo-Daten erfolgreich erstellt!");
+      } catch (e) {
+          alert("Fehler beim Erstellen der Daten.");
+      } finally {
+          setSeeding(false);
+      }
+  };
 
   const openIncidents = incidents.filter(i => i.status === IncidentStatus.OPEN).length;
   const monitoringIncidents = incidents.filter(i => i.status === IncidentStatus.MONITORING).length;
@@ -135,6 +154,20 @@ export const Dashboard: React.FC = () => {
                 ))
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Developer Tools Section */}
+      <div className="mt-8 border-t border-gray-200 pt-8">
+        <div className="flex justify-end">
+            <button 
+                onClick={handleForceSeed}
+                disabled={seeding}
+                className="flex items-center space-x-2 text-xs text-gray-500 hover:text-blue-600 transition-colors bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded border border-gray-200"
+            >
+                <Database className={`w-4 h-4 ${seeding ? 'animate-spin' : ''}`} />
+                <span>{seeding ? 'Erstelle Einträge... (bitte warten)' : 'Demo-Daten generieren (Skibidi Toilet & Co.)'}</span>
+            </button>
         </div>
       </div>
     </div>

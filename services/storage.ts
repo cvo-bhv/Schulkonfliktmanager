@@ -167,7 +167,7 @@ const getRandomDate = (start: Date, end: Date) => {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
-export const seedDataIfEmpty = async () => {
+export const seedData = async (force: boolean = false) => {
     try {
         console.log("Checking if seeding is required...");
         // Check if API is reachable first by trying to get years
@@ -176,15 +176,16 @@ export const seedDataIfEmpty = async () => {
             existingYears = await getYears();
         } catch (e) {
             console.error("Kann Datenbank nicht erreichen. Seeding abgebrochen.", e);
+            alert("Datenbank nicht erreichbar. Bitte Verbindung prüfen.");
             return;
         }
 
-        if (existingYears.length > 0) {
+        if (!force && existingYears.length > 0) {
             console.log("Database already has data. Skipping seed.");
             return;
         }
 
-        console.log("Database empty. Starting extensive demo data seeding (100 items)...");
+        console.log("Starting extensive demo data seeding (100 items)...");
         
         // 1. Create Years 5-10
         const years: YearLevel[] = [];
@@ -255,12 +256,14 @@ export const seedDataIfEmpty = async () => {
             incident.category = scenario.cat;
             
             await saveIncident(incident);
-            if (i % 10 === 0) console.log(`Seeded ${i}/100 incidents...`);
         }
-        console.log("Seeding complete! Refreshing...");
-        window.location.reload(); // Force reload to show data
+        console.log("Seeding complete!");
+        return true;
     } catch (e) {
         console.error("Seeding failed critically", e);
-        alert("Fehler beim Erstellen der Testdaten. Siehe Konsole für Details.");
+        throw e;
     }
 };
+
+// Alias for compatibility
+export const seedDataIfEmpty = async () => seedData(false);
