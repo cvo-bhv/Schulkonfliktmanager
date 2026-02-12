@@ -1,0 +1,18 @@
+Behalte diese Datei
+1. Die "Vorsichts-Variante" (Manuell)
+Bevor du in AI Studio auf "Sync" oder "Push" drückst, kopiere dir den Inhalt deiner deploy.yml kurz in eine Textdatei. Falls der Ordner nach dem Sync weg ist, lege ihn auf GitHub mit Add file -> Create new file wieder an. Das dauert 30 Sekunden, ist aber lästig.
+
+2. Die "Dummy-Datei" Strategie
+Manchmal löschen Tools den Ordner nur, weil sie denken, er sei für das Projekt irrelevant.
+Erstelle im Ordner .github/ eine zusätzliche, völlig normale Datei namens keep.txt.
+Manchmal "sieht" der Sync-Algorithmus von AI Studio den Ordner dann als Teil des Projekts an und lässt ihn am Leben.
+3. Der Wechsel des Workflows (Empfohlen)
+Die sauberste Lösung ist, AI Studio nur für das Schreiben des Codes zu nutzen, aber den Upload zu GitHub über ein anderes Tool zu machen:
+GitHub Desktop: Ein sehr einfaches Programm für Windows/Mac. Du lädst dein Projekt einmal auf den Rechner.
+Ablauf: Du kopierst den Code aus AI Studio in deinen lokalen Ordner und drückst in GitHub Desktop auf "Commit & Push".
+Der Vorteil: Da GitHub Desktop den .github-Ordner respektiert, wird er niemals gelöscht.
+Warum das so wichtig ist:
+Ohne die deploy.yml stoppt dein gesamter Automatisierungs-Motor. Wenn du das nächste Mal eine Änderung am Design machst, würden diese Änderungen niemals auf deinem Server (46.38.249.149) ankommen.
+
+Aktueller Status-Check:
+Ist der .github-Ordner aktuell auf GitHub noch da, oder hat der letzte Sync ihn schon wieder "gefressen"? Falls er weg ist, kann ich dir den Code für die deploy.yml noch einmal posten, damit du ihn direkt wieder einfügen kannst.
