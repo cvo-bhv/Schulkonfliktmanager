@@ -172,6 +172,17 @@ export const IncidentList: React.FC = () => {
 
         {/* Row 2: Dropdowns */}
         <div className="flex flex-wrap gap-4">
+             {/* Sort Order - Moved to start */}
+             <div className="relative min-w-[140px]">
+                 <button 
+                    onClick={() => setSortOrder(prev => prev === 'ASC' ? 'DESC' : 'ASC')}
+                    className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium text-gray-700"
+                 >
+                    <span>{sortOrder === 'DESC' ? 'Neueste zuerst' : 'Älteste zuerst'}</span>
+                    <ArrowUpDown className="w-4 h-4 text-gray-500" />
+                 </button>
+             </div>
+
              {/* Class Filter */}
              <div className="relative flex-1 min-w-[150px]">
                 <select 
@@ -222,17 +233,6 @@ export const IncidentList: React.FC = () => {
                     {availableMonths.map(m => <option key={m} value={m}>{formatMonthLabel(m)}</option>)}
                 </select>
                 <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
-             </div>
-
-             {/* Sort Order */}
-             <div className="relative min-w-[140px]">
-                 <button 
-                    onClick={() => setSortOrder(prev => prev === 'ASC' ? 'DESC' : 'ASC')}
-                    className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 text-sm font-medium text-gray-700"
-                 >
-                    <span>{sortOrder === 'DESC' ? 'Neueste zuerst' : 'Älteste zuerst'}</span>
-                    <ArrowUpDown className="w-4 h-4 text-gray-500" />
-                 </button>
              </div>
         </div>
       </div>
