@@ -6,12 +6,29 @@ import { v4 as uuidv4 } from 'uuid';
 // Oder lade den 'dist' Ordner nach dem Build auf den Server hoch.
 const API_URL = './api.php'; 
 
+// Hilfsfunktion: Holt den Access-Key aus der aktuellen Browser-URL
+const getAccessKey = () => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('access') || '';
+};
+
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
+  // Access Key an die URL anhängen
+  const accessKey = getAccessKey();
+  const separator = url.includes('?') ? '&' : '?';
+  const securedUrl = `${url}${separator}access=${accessKey}`;
+
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(securedUrl, options);
     
     // Prüfen ob die Antwort ok ist
     if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error(`API nicht gefunden (404). Wurde 'api.php' auf den Server hochgeladen?`);
+        }
+        if (response.status === 403) {
+            throw new Error(`Zugriff verweigert (403). Falscher oder fehlender Access-Key.`);
+        }
         throw new Error(`Server Fehler: ${response.status} ${response.statusText}`);
     }
 

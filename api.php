@@ -5,11 +5,24 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 
-// Preflight-Anfragen beantworten
+// Preflight-Anfragen beantworten (bevor Auth geprüft wird)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
+
+// --------------------------------------------------------
+// SICHERHEITS-CHECK
+// --------------------------------------------------------
+$ACCESS_KEY = 'SchulManager_2024_Safe!';
+
+// Zugriff nur mit korrektem Key in der URL
+if (!isset($_GET['access']) || $_GET['access'] !== $ACCESS_KEY) {
+    http_response_code(403);
+    echo json_encode(["error" => "Zugriff verweigert. Fehlender oder falscher Sicherheitsschlüssel."]);
+    exit();
+}
+// --------------------------------------------------------
 
 // --------------------------------------------------------
 // DATENBANK KONFIGURATION
